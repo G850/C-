@@ -817,6 +817,5 @@ namespace serial_port
             //   feedBack.ShowDialog();//ShowDialog方式打开反馈窗口  
         }
 
-
     }
 }
