@@ -185,7 +185,6 @@ namespace serial_port
                     ComPort.DataBits = Convert.ToInt32(DataBitsCbobox.SelectedValue);//设置当前数据位  
                     ComPort.StopBits = (StopBits)Convert.ToDouble(StopBitsCbobox.SelectedValue);//设置当前停止位                      
                     ComPort.Open();//打开串口  
-
                 }
                 catch//如果串口被其他占用，则无法打开  
                 {
@@ -196,24 +195,23 @@ namespace serial_port
 
                 //↓↓↓↓↓↓↓↓↓成功打开串口后的设置↓↓↓↓↓↓↓↓↓  
                 openBtn.Content = "关闭串口";//按钮显示改为“关闭按钮”  
-                                         //    OpenImage.Source = new BitmapImage(new Uri("image\\On.png", UriKind.Relative));//开关状态图片切换为ON  
-                ComPortIsOpen = true;//串口打开状态字改为true  
-                WaitClose = false;//等待关闭串口状态改为false                  
-                SendBtn.IsEnabled = true;//使能“发送数据”按钮  
-                DefaultSet.IsEnabled = false;//打开串口后失能重置功能  
-                AvailableComCbobox.IsEnabled = false;//失能可用串口控件  
-                RateListCbobox.IsEnabled = false;//失能可用波特率控件  
-                ParityComCbobox.IsEnabled = false;//失能可用校验位控件  
-                DataBitsCbobox.IsEnabled = false;//失能可用数据位控件  
-                StopBitsCbobox.IsEnabled = false;//失能可用停止位控件  
-                                                 //↑↑↑↑↑↑↑↑↑成功打开串口后的设置↑↑↑↑↑↑↑↑↑  
+                //    OpenImage.Source = new BitmapImage(new Uri("image\\On.png", UriKind.Relative));//开关状态图片切换为ON  
+                ComPortIsOpen = true;                  //串口打开状态字改为true  
+                WaitClose = false;                     //等待关闭串口状态改为false                  
+                SendBtn.IsEnabled = true;              //使能“发送数据”按钮  
+                DefaultSet.IsEnabled = false;          //打开串口后失能重置功能  
+                AvailableComCbobox.IsEnabled = false;  //失能可用串口控件  
+                RateListCbobox.IsEnabled = false;      //失能可用波特率控件  
+                ParityComCbobox.IsEnabled = false;     //失能可用校验位控件  
+                DataBitsCbobox.IsEnabled = false;      //失能可用数据位控件  
+                StopBitsCbobox.IsEnabled = false;      //失能可用停止位控件  
+                                                       //↑↑↑↑↑↑↑↑↑成功打开串口后的设置↑↑↑↑↑↑↑↑↑  
 
                 if (AutoSendCheck.IsChecked == true)//如果打开前，自动发送控件就被选中，则打开串口后自动开始发送数据  
                 {
                     autoSendTick.Interval = TimeSpan.FromMilliseconds(Convert.ToInt32(Time.Text));//设置自动发送间隔  
                     autoSendTick.Start();//开启自动发送  
                 }
-
             }
             #endregion
             #region 关闭串口  
@@ -458,9 +456,9 @@ namespace serial_port
                     UIAction(() =>
                     {
                         if (ComPort.IsOpen == false)//如果ComPort.IsOpen == false，说明串口已丢失  
-                                    {
+                        {
                             SetComLose();//串口丢失后相关设置  
-                                    }
+                        }
                         else
                         {
                             MessageBox.Show("无法接收数据，原因未知！");
@@ -507,57 +505,55 @@ namespace serial_port
             }
         }
 #else
-        //        private void ComReceive(object sender, SerialDataReceivedEventArgs e)//接收数据 数据在接收中断里面处理  
-        //        {  
-        //            if (WaitClose) return;//如果正在关闭串口，则直接返回  
-        //            if (recStaus)//如果已经开启接收  
-        //            {  
-        //                try  
-        //                {  
-        //                    Listening = true;////设置标记，说明我已经开始处理数据，一会儿要使用系统UI的。  
-        //                    Thread.Sleep(10);//发送和接收均为文本时，接收中为加入判断是否为文字的算法，发送你（C4E3），接收可能识别为C4,E3，可用在这里加延时解决  
-        //                    string recData;//接收数据转码后缓存  
-        //                    byte[] recBuffer = new byte[ComPort.BytesToRead];//接收数据缓存  
-        //                    ComPort.Read(recBuffer, 0, recBuffer.Length);//读取数据  
-        //                    recData = System.Text.Encoding.Default.GetString(recBuffer);//转码  
-        //                    this.recTBox.Dispatcher.Invoke(//WPF为单线程，此接收中断线程不能对WPF进行操作，用如下方法才可操作  
-        //                    new Action(  
-        //                         delegate  
-        //                         {  
-        //                             recCount.Text = (Convert.ToInt32(recCount.Text) + recBuffer.Length).ToString();//接收数据字节数  
-        //                             if (recModeCheck.IsChecked == false)//接收模式为ASCII文本模式  
-        //                             {  
-        //                                 recTBox.Text += recData;//加显到接收区  
+                private void ComReceive(object sender, SerialDataReceivedEventArgs e)//接收数据 数据在接收中断里面处理  
+                {  
+                    if (WaitClose) return;//如果正在关闭串口，则直接返回  
+                    if (recStaus)//如果已经开启接收  
+                    {  
+                        try  
+                        {  
+                            Listening = true;////设置标记，说明我已经开始处理数据，一会儿要使用系统UI的。  
+                            Thread.Sleep(10);//发送和接收均为文本时，接收中为加入判断是否为文字的算法，发送你（C4E3），接收可能识别为C4,E3，可用在这里加延时解决  
+                            string recData;//接收数据转码后缓存  
+                            byte[] recBuffer = new byte[ComPort.BytesToRead];//接收数据缓存  
+                            ComPort.Read(recBuffer, 0, recBuffer.Length);//读取数据  
+                            recData = System.Text.Encoding.Default.GetString(recBuffer);//转码  
+                            this.recTBox.Dispatcher.Invoke(//WPF为单线程，此接收中断线程不能对WPF进行操作，用如下方法才可操作  
+                            new Action(  
+                                 delegate  
+                                 {  
+                                     recCount.Text = (Convert.ToInt32(recCount.Text) + recBuffer.Length).ToString();//接收数据字节数  
+                                     if (recModeCheck.IsChecked == false)//接收模式为ASCII文本模式  
+                                     {  
+                                         recTBox.Text += recData;//加显到接收区  
 
-        //                             }  
-        //                             else  
-        //                             {  
-        //                                 StringBuilder recBuffer16 = new StringBuilder();//定义16进制接收缓存  
-        //                                 for (int i = 0; i < recBuffer.Length; i++)  
-        //                                 {  
-        //                                     recBuffer16.AppendFormat("{0:X2}" + " ", recBuffer[i]);//X2表示十六进制格式（大写），域宽2位，不足的左边填0。  
-        //                                 }  
-        //                                 recTBox.Text += recBuffer16.ToString();//加显到接收区  
-        //                             }  
-        //                             recScrol.ScrollToBottom();//接收文本框滚动至底部  
-        //                         }  
-        //                    )  
-        //                    );  
+                                     }  
+                                     else  
+                                     {  
+                                         StringBuilder recBuffer16 = new StringBuilder();//定义16进制接收缓存  
+                                         for (int i = 0; i < recBuffer.Length; i++)  
+                                         {  
+                                             recBuffer16.AppendFormat("{0:X2}" + " ", recBuffer[i]);//X2表示十六进制格式（大写），域宽2位，不足的左边填0。  
+                                         }  
+                                         recTBox.Text += recBuffer16.ToString();//加显到接收区  
+                                     }  
+                                     recScrol.ScrollToBottom();//接收文本框滚动至底部  
+                                 }  
+                            )  
+                            );  
 
-        //                }  
-        //                finally  
-        //                {  
-        //                    Listening = false;//UI使用结束，用于关闭串口时判断，避免自动发送时拔掉串口，陷入死循环  
-        //                }  
+                        }  
+                        finally  
+                        {  
+                            Listening = false;//UI使用结束，用于关闭串口时判断，避免自动发送时拔掉串口，陷入死循环  
+                        }  
 
-        //            }  
-        //            else//暂停接收  
-        //            {  
-        //                ComPort.DiscardInBuffer();//清接收缓存  
-        //            }  
-
-
-        //        }  
+                    }  
+                    else//暂停接收  
+                    {  
+                        ComPort.DiscardInBuffer();//清接收缓存  
+                    }  
+                }  
 #endif
         void UIAction(Action action)//在主线程外激活线程方法  
         {
@@ -806,6 +802,8 @@ namespace serial_port
         }
         private void Info_click(object sender, RoutedEventArgs e)//帮助-关于click事件  
         {
+
+            RateListCbobox.ItemsSource = "rateList";
             //    InfoWindow info = new InfoWindow();//new关于窗口  
             //    info.Owner = this;//赋予主窗口，子窗口打开后，再次点击主窗口，子窗口闪烁  
             //    info.Show();//ShowDialog方式打开关于窗口  
@@ -817,5 +815,9 @@ namespace serial_port
             //   feedBack.ShowDialog();//ShowDialog方式打开反馈窗口  
         }
 
+        private void RateListCbobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
