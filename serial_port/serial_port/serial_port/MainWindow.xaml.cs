@@ -138,10 +138,10 @@ namespace serial_port
                                                     //↑↑↑↑↑↑↑↑↑默认设置↑↑↑↑↑↑↑↑↑  
             ComPort.DataReceived += new SerialDataReceivedEventHandler(ComReceive);//串口接收中断  
             autoSendTick.Tick += new EventHandler(AutoSend);//定时发送中断  
-        #if MULTITHREAD
+#if MULTITHREAD
             //Thread _ComRec = new Thread(new ThreadStart(ComRec)); //查询串口接收数据线程声明  
             //_ComRec.Start();//启动线程  
-        #endif
+#endif
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)//关闭窗口closing  
         {
@@ -815,9 +815,5 @@ namespace serial_port
             //   feedBack.ShowDialog();//ShowDialog方式打开反馈窗口  
         }
 
-        private void RateListCbobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }
