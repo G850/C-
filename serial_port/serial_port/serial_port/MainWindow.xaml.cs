@@ -59,13 +59,15 @@ namespace serial_port
             ports = SerialPort.GetPortNames();       //获取可用串口  
             if (ports.Length > 0)                    //ports.Length > 0说明有串口可用  
             {
+                txtTip.Text = "检测到" + ports.Length + "个可用串口";
+
                 for (int i = 0; i < ports.Length; i++)
                 {
                     comList.Add(new Customer() { Com = ports[i] });  //下拉控件里添加可用串口  
                 }
-                AvailableComCbobox.ItemsSource = comList;       //资源路劲  
-                AvailableComCbobox.DisplayMemberPath = "com";   //显示路径  
-                AvailableComCbobox.SelectedValuePath = "com";   //值路径  
+                AvailableComCbobox.ItemsSource = ports;       //资源路劲  
+                //AvailableComCbobox.DisplayMemberPath = "com";   //显示路径  
+                //AvailableComCbobox.SelectedValuePath = "com";   //值路径  
                 AvailableComCbobox.SelectedValue = ports[0];    //默认选第1个串口  
             }
             else//未检测到串口  
@@ -205,7 +207,7 @@ namespace serial_port
                 ParityComCbobox.IsEnabled = false;     //失能可用校验位控件  
                 DataBitsCbobox.IsEnabled = false;      //失能可用数据位控件  
                 StopBitsCbobox.IsEnabled = false;      //失能可用停止位控件  
-                                                       //↑↑↑↑↑↑↑↑↑成功打开串口后的设置↑↑↑↑↑↑↑↑↑  
+                //↑↑↑↑↑↑↑↑↑成功打开串口后的设置↑↑↑↑↑↑↑↑↑  
 
                 if (AutoSendCheck.IsChecked == true)//如果打开前，自动发送控件就被选中，则打开串口后自动开始发送数据  
                 {
@@ -310,8 +312,8 @@ namespace serial_port
                         UIAction(() =>
                         {
                             AutoSendCheck.IsChecked = false;//自动发送改为未选中  
-                                        autoSendTick.Stop();//关闭自动发送  
-                                        MessageBox.Show("请输入正确的16进制数据");
+                            autoSendTick.Stop();//关闭自动发送  
+                            MessageBox.Show("请输入正确的16进制数据");
                         });
 
                         Sending = false;//关闭正在发送状态  
@@ -333,7 +335,7 @@ namespace serial_port
                         UIAction(() =>//激活UI  
                         {
                             SendCount.Text = (Convert.ToInt32(SendCount.Text) + 1000).ToString();//刷新发送字节数  
-                                    });
+                        });
                     }
                     if (sendBuffer.Length % 1000 != 0)//发送字节小于1000Bytes或上面发送剩余的数据  
                     {
@@ -341,7 +343,7 @@ namespace serial_port
                         UIAction(() =>
                         {
                             SendCount.Text = (Convert.ToInt32(SendCount.Text) + sendBuffer.Length % 1000).ToString();//刷新发送字节数  
-                                    });
+                        });
                     }
                 }
                 catch//如果无法发送，产生异常  
@@ -349,9 +351,9 @@ namespace serial_port
                     UIAction(() =>//激活UI  
                     {
                         if (ComPort.IsOpen == false)//如果ComPort.IsOpen == false，说明串口已丢失  
-                                    {
+                        {
                             SetComLose();//串口丢失后的设置  
-                                    }
+                        }
                         else
                         {
                             MessageBox.Show("无法发送数据，原因未知！");
@@ -484,21 +486,22 @@ namespace serial_port
                     UIAction(() =>
                     {
                         if (recModeCheck.IsChecked == false)//接收模式为ASCII文本模式  
-                                    {
+                        {
                             recTBox.Text += recData;//加显到接收区  
-                                    }
+                        }
                         else
                         {
                             StringBuilder recBuffer16 = new StringBuilder();//定义16进制接收缓存  
-                                        for (int i = 0; i < recBuffer.Length; i++)
+                            for (int i = 0; i < recBuffer.Length; i++)
                             {
                                 recBuffer16.AppendFormat("{0:X2}" + " ", recBuffer[i]);//X2表示十六进制格式（大写），域宽2位，不足的左边填0。  
-                                        }
+                            }
                             recTBox.Text += recBuffer16.ToString();//加显到接收区  
-                                    }
+                        }
                         RecCount.Text = (Convert.ToInt32(RecCount.Text) + recBuffer.Length).ToString();//接收数据字节数  
-                                                                                                       //    recScrol.ScrollToBottom();//接收文本框滚动至底部  
-                                });
+
+                        //recScrol.ScrollToBottom();//接收文本框滚动至底部  
+                    });
                 }
                 else
                     Thread.Sleep(100);//如果不延时，一直查询，将占用CPU过高  
@@ -595,7 +598,7 @@ namespace serial_port
         private void GetPort()//刷新可用串口  
         {
             comList.Clear();//情况控件链接资源  
-            AvailableComCbobox.DisplayMemberPath = "com1";
+            //AvailableComCbobox.DisplayMemberPath = "com1";
             AvailableComCbobox.SelectedValuePath = null;//路径都指为空，清空下拉控件显示，下面重新添加  
 
             ports = new string[SerialPort.GetPortNames().Length];//重新定义可用串口数组长度  
@@ -606,9 +609,9 @@ namespace serial_port
                 {
                     comList.Add(new Customer() { Com = ports[i] });//下拉控件里添加可用串口  
                 }
-                AvailableComCbobox.ItemsSource = comList;//可用串口下拉控件资源路径  
-                AvailableComCbobox.DisplayMemberPath = "com";//可用串口下拉控件显示路径  
-                AvailableComCbobox.SelectedValuePath = "com";//可用串口下拉控件值路径  
+                AvailableComCbobox.ItemsSource = ports;//可用串口下拉控件资源路径  
+                //AvailableComCbobox.DisplayMemberPath = "com";//可用串口下拉控件显示路径  
+                //AvailableComCbobox.SelectedValuePath = "com";//可用串口下拉控件值路径  
             }
         }
         private void SendClearBtn_Click(object sender, RoutedEventArgs e)//清空发送区  
@@ -630,7 +633,7 @@ namespace serial_port
             {
                 recStaus = false;//暂停接收  
                 stopRecBtn.Content = "开启接收";//按钮显示为开启接收  
-                 //    recPrompt.Visibility = Visibility.Visible;//显示已暂停接收提示  
+                //recPrompt.Visibility = Visibility.Visible;//显示已暂停接收提示  
                  //   recBorder.Opacity = 0;//接收区透明度改为0  
             }
             else//当前状态为关闭接收状态  
@@ -733,9 +736,9 @@ namespace serial_port
             if (open_fd.ShowDialog() == true)//选择了文件  
             {
                 sendTBox.Text = File.ReadAllText(open_fd.FileName);//读TXT方法1 简单，快捷，为StreamReader的封装  
-                                                                   //StreamReader sr = new StreamReader(open_fd.FileName);//读TXT方法2 复杂，功能强大  
-                                                                   //sendTBox.Text = sr.ReadToEnd();//调用ReadToEnd方法读取选中文件的全部内容  
-                                                                   //sr.Close();//关闭当前文件读取流  
+                //StreamReader sr = new StreamReader(open_fd.FileName);//读TXT方法2 复杂，功能强大  
+                //sendTBox.Text = sr.ReadToEnd();//调用ReadToEnd方法读取选中文件的全部内容  
+                //sr.Close();//关闭当前文件读取流  
             }
         }
         private void FileSave(object sender, RoutedEventArgs e)//保存数据按钮crtl+S  
@@ -815,5 +818,9 @@ namespace serial_port
             //   feedBack.ShowDialog();//ShowDialog方式打开反馈窗口  
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
