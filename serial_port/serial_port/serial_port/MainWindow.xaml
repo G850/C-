@@ -43,13 +43,15 @@
         <TextBlock HorizontalAlignment="Left" Margin="24,541,0,0" TextWrapping="Wrap" Text="发送字节数：" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="201,541,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="接收字节数："/>
         <TextBox x:Name="SendCount" HorizontalAlignment="Left" Margin="96,538,0,0" TextWrapping="Wrap" Width="53" Height="26" VerticalAlignment="Top"/>
-        <TextBox x:Name="RecCount" HorizontalAlignment="Left" Margin="273,538,0,0" TextWrapping="Wrap" Width="53" Height="26" VerticalAlignment="Top"/>
+        <TextBox x:Name="RecCount" HorizontalAlignment="Left" Margin="273,538,0,0" TextWrapping="Wrap" Width="308" Height="26" VerticalAlignment="Top"/>
         <Button Content="文件" HorizontalAlignment="Left" Margin="24,10,0,0" VerticalAlignment="Top" Width="50" Click="Info_click"/>
         <Button Content="帮助" HorizontalAlignment="Left" Margin="104,10,0,0" VerticalAlignment="Top" Width="50" Click="FeedBack_Click"/>
         <ComboBox x:Name="RateListCbobox" HorizontalAlignment="Left" Margin="76,80,0,0" VerticalAlignment="Top" Width="90"/>
         <ComboBox x:Name="AvailableComCbobox" HorizontalAlignment="Left" Margin="76,48,0,0" VerticalAlignment="Top" Width="90" PreviewMouseDown="AvailableComCbobox_PreviewMouseDown"/>
         <TextBox x:Name="txtTip" HorizontalAlignment="Left" Height="23" Margin="186,9,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Button Content="打开文件" HorizontalAlignment="Left" Margin="586,503,0,38" Width="88" Click="Button_Click"/>
+        <Button Content="打开文件" HorizontalAlignment="Left" Margin="586,503,0,0" Width="88" Click="Button_Click" Height="33" VerticalAlignment="Top"/>
+        <TextBox x:Name="RecCount1" HorizontalAlignment="Left" Height="23" Margin="239,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="89,371,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
     </Grid>
 </Window>

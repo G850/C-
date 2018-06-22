@@ -473,11 +473,14 @@ namespace serial_port
             {
                 ComPort.DiscardInBuffer();//清接收缓存  
             }
+
+            ComRec();
+
         }
         void ComRec()//接收线程，窗口初始化中就开始启动运行  
         {
-            while (true)//一直查询串口接收线程中是否有新数据  
-            {
+            //while (true)//一直查询串口接收线程中是否有新数据  
+            //{
                 if (recQueue.Count > 0)//当串口接收线程中有新的数据时候，队列中有新进的成员recQueue.Count > 0  
                 {
                     string recData;//接收数据转码后缓存  
@@ -498,14 +501,14 @@ namespace serial_port
                             }
                             recTBox.Text += recBuffer16.ToString();//加显到接收区  
                         }
-                        RecCount.Text = (Convert.ToInt32(RecCount.Text) + recBuffer.Length).ToString();//接收数据字节数  
-
+                        //RecCount.Text = (Convert.ToInt32(RecCount.Text) + recBuffer.Length).ToString();//接收数据字节数  
+                        
                         //recScrol.ScrollToBottom();//接收文本框滚动至底部  
                     });
                 }
                 else
                     Thread.Sleep(100);//如果不延时，一直查询，将占用CPU过高  
-            }
+            //}
         }
 #else
                 private void ComReceive(object sender, SerialDataReceivedEventArgs e)//接收数据 数据在接收中断里面处理  
@@ -822,5 +825,7 @@ namespace serial_port
         {
 
         }
+
+      
     }
 }
