@@ -4,6 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
         xmlns:local="clr-namespace:serial_port"
         xmlns:System="clr-namespace:System;assembly=mscorlib" 
         mc:Ignorable="d"
@@ -14,44 +15,53 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="DefaultSet" Content="重置" HorizontalAlignment="Left" Margin="23,203,0,0" VerticalAlignment="Top" Width="143" Click="DefaultSet_Click"/>
-        <TextBox x:Name="recTBox" HorizontalAlignment="Left" Height="285" Margin="186,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="580"/>
-        <TextBox x:Name="sendTBox" HorizontalAlignment="Left" Height="140" Margin="23,396,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="558" TextChanged="Time_TextChanged"/>
-        <TextBlock HorizontalAlignment="Left" Margin="186,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="接收数"/><Run Text="："/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="23,51,0,0" TextWrapping="Wrap" Text="串口号：" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="23,80,0,0" TextWrapping="Wrap" Text="波特率：" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="23,108,0,0" TextWrapping="Wrap" Text="效验位：" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="23,140,0,0" TextWrapping="Wrap" Text="数据位：" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="23,172,0,0" TextWrapping="Wrap" Text="停止位：" VerticalAlignment="Top" RenderTransformOrigin="0.438,-0.189"/>
-        <Button x:Name="openBtn" Content="打开串口" HorizontalAlignment="Left" Margin="66,239,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.227,0.409" Height="45" Click="Button_Open"/>
-        <Button x:Name="stopRecBtn" Content="暂停接收" HorizontalAlignment="Left" Margin="593,41,0,0" VerticalAlignment="Top" Width="75" Click="StopRecBtn_Click"/>
-        <Button Content="清空接收区" HorizontalAlignment="Left" Margin="691,41,0,0" VerticalAlignment="Top" Width="75" Click="RecClearBtn_Click"/>
-        <Button Content="保存数据" HorizontalAlignment="Left" Margin="23,331,0,0" VerticalAlignment="Top" Width="143" Click="SaveNew_Click"/>
-        <Button Content="清空发送区" HorizontalAlignment="Left" Margin="691,412,0,0" VerticalAlignment="Top" Width="75" Click="SendClearBtn_Click"/>
-        <Button Content="计数清零" HorizontalAlignment="Left" Margin="691,445,0,0" VerticalAlignment="Top" Width="75" Click="CountClearBtn_Click" RenderTransformOrigin="0.547,0.045"/>
-        <Button x:Name="SendBtn" Content="发送数据" HorizontalAlignment="Left" Margin="691,483,0,0" VerticalAlignment="Top" Width="75" Height="53" Click="Button_Send"/>
-        <CheckBox x:Name="sendModeCheck" Content="16进制发送" HorizontalAlignment="Left" Margin="586,415,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="AutoSendCheck" Content="自动发送" HorizontalAlignment="Left" Margin="586,445,0,0" VerticalAlignment="Top" Checked="AutoSendCheck_Click"/>
-        <TextBox x:Name="Time" HorizontalAlignment="Left" Height="23" Margin="615,468,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="43" LostFocus="Time_LostFocus"/>
-        <TextBlock HorizontalAlignment="Left" Margin="586,475,0,0" TextWrapping="Wrap" Text="周期" VerticalAlignment="Top" RenderTransformOrigin="0.458,-0.938"/>
-        <TextBlock HorizontalAlignment="Left" Margin="663,475,0,0" TextWrapping="Wrap" Text="ms" VerticalAlignment="Top"/>
-        <CheckBox x:Name="recModeCheck" Content="16进制接收" HorizontalAlignment="Left" Margin="23,298,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="ParityComCbobox" HorizontalAlignment="Left" Margin="76,108,0,0" VerticalAlignment="Top" Width="90"/>
-        <ComboBox x:Name="DataBitsCbobox" HorizontalAlignment="Left" Margin="76,140,0,0" VerticalAlignment="Top" Width="90"/>
-        <ComboBox x:Name="StopBitsCbobox" HorizontalAlignment="Left" Margin="76,172,0,0" VerticalAlignment="Top" Width="90"/>
-        <TextBlock HorizontalAlignment="Left" Margin="24,371,0,0" TextWrapping="Wrap" Text="发送的数：" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="24,541,0,0" TextWrapping="Wrap" Text="发送字节数：" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="201,541,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="接收字节数："/>
-        <TextBox x:Name="SendCount" HorizontalAlignment="Left" Margin="96,538,0,0" TextWrapping="Wrap" Width="53" Height="26" VerticalAlignment="Top"/>
-        <TextBox x:Name="RecCount" HorizontalAlignment="Left" Margin="273,538,0,0" TextWrapping="Wrap" Width="308" Height="26" VerticalAlignment="Top"/>
-        <Button Content="文件" HorizontalAlignment="Left" Margin="24,10,0,0" VerticalAlignment="Top" Width="50" Click="Info_click"/>
-        <Button Content="帮助" HorizontalAlignment="Left" Margin="104,10,0,0" VerticalAlignment="Top" Width="50" Click="FeedBack_Click"/>
-        <ComboBox x:Name="RateListCbobox" HorizontalAlignment="Left" Margin="76,80,0,0" VerticalAlignment="Top" Width="90"/>
-        <ComboBox x:Name="AvailableComCbobox" HorizontalAlignment="Left" Margin="76,48,0,0" VerticalAlignment="Top" Width="90" PreviewMouseDown="AvailableComCbobox_PreviewMouseDown"/>
-        <TextBox x:Name="txtTip" HorizontalAlignment="Left" Height="23" Margin="186,9,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Button Content="打开文件" HorizontalAlignment="Left" Margin="586,503,0,0" Width="88" Click="Button_Click" Height="33" VerticalAlignment="Top"/>
-        <TextBox x:Name="RecCount1" HorizontalAlignment="Left" Height="23" Margin="239,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="89,371,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="DefaultSet" Content="重置" Margin="23,203,0,0" Click="DefaultSet_Click" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="143"/>
+        <TextBox x:Name="recTBox" Margin="186,80,26,0" TextWrapping="Wrap" Height="82" VerticalAlignment="Top"/>
+        <TextBox x:Name="sendTBox" Margin="23,0,211,38" TextWrapping="Wrap" TextChanged="Time_TextChanged" Height="140" VerticalAlignment="Bottom"/>
+        <TextBlock HorizontalAlignment="Left" Margin="186,54,0,0" TextWrapping="Wrap" Height="16" VerticalAlignment="Top"><Run Text="接收数"/><Run Text="："/></TextBlock>
+        <TextBlock Margin="23,51,0,0" TextWrapping="Wrap" Text="串口号：" HorizontalAlignment="Left" Width="48" Height="16" VerticalAlignment="Top"/>
+        <TextBlock Margin="23,80,0,0" TextWrapping="Wrap" Text="波特率：" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48"/>
+        <TextBlock Margin="23,108,0,0" TextWrapping="Wrap" Text="效验位：" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48"/>
+        <TextBlock Margin="23,140,0,0" TextWrapping="Wrap" Text="数据位：" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48"/>
+        <TextBlock Margin="23,172,0,0" TextWrapping="Wrap" Text="停止位：" RenderTransformOrigin="0.438,-0.189" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="48"/>
+        <Button x:Name="openBtn" Content="打开串口" Margin="66,239,0,0" RenderTransformOrigin="0.227,0.409" Click="Button_Open" Height="45" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100"/>
+        <Button x:Name="stopRecBtn" Content="暂停接收" Margin="0,41,124,0" Click="StopRecBtn_Click" HorizontalAlignment="Right" Width="75" Height="22" VerticalAlignment="Top"/>
+        <Button Content="清空接收区" Margin="0,41,26,0" Click="RecClearBtn_Click" HorizontalAlignment="Right" Width="75" Height="22" VerticalAlignment="Top"/>
+        <Button Content="保存数据" Margin="23,331,0,0" Click="SaveNew_Click" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="143"/>
+        <Button Content="清空发送区" Margin="0,0,26,140" Click="SendClearBtn_Click" HorizontalAlignment="Right" Width="75" Height="22" VerticalAlignment="Bottom"/>
+        <Button Content="计数清零" Margin="0,0,26,107" Click="CountClearBtn_Click" RenderTransformOrigin="0.547,0.045" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
+        <Button x:Name="SendBtn" Content="发送数据" Margin="0,0,26,38" Click="Button_Send" HorizontalAlignment="Right" Width="75" Height="53" VerticalAlignment="Bottom"/>
+        <CheckBox x:Name="sendModeCheck" Content="16进制发送" Margin="0,0,127,143" HorizontalAlignment="Right" Width="79" Height="16" VerticalAlignment="Bottom"/>
+        <CheckBox x:Name="AutoSendCheck" Content="自动发送" Margin="0,0,141,113" Checked="AutoSendCheck_Click" Height="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="65"/>
+        <TextBox x:Name="Time" Margin="0,0,134,83" TextWrapping="Wrap" LostFocus="Time_LostFocus" HorizontalAlignment="Right" Width="43" Height="23" VerticalAlignment="Bottom"/>
+        <TextBlock Margin="0,0,182,83" TextWrapping="Wrap" Text="周期" RenderTransformOrigin="0.458,-0.938" HorizontalAlignment="Right" Width="24" Height="16" VerticalAlignment="Bottom"/>
+        <TextBlock Margin="0,0,112,83" TextWrapping="Wrap" Text="ms" HorizontalAlignment="Right" Width="17" Height="16" VerticalAlignment="Bottom"/>
+        <CheckBox x:Name="recModeCheck" Content="16进制接收" Margin="23,298,0,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="79"/>
+        <ComboBox x:Name="ParityComCbobox" Margin="76,108,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90"/>
+        <ComboBox x:Name="DataBitsCbobox" Margin="76,140,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90"/>
+        <ComboBox x:Name="StopBitsCbobox" Margin="76,172,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90"/>
+        <TextBlock Margin="29,366,0,0" TextWrapping="Wrap" Text="发送的数：" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60"/>
+        <TextBlock Margin="24,0,0,17" TextWrapping="Wrap" Text="发送字节数：" HorizontalAlignment="Left" Width="72" Height="16" VerticalAlignment="Bottom"/>
+        <TextBlock Margin="201,0,0,17" TextWrapping="Wrap" Text="接收字节数：" HorizontalAlignment="Left" Width="72" Height="16" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="SendCount" Margin="96,0,0,10" TextWrapping="Wrap" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="53"/>
+        <TextBox x:Name="RecCount" Margin="273,0,0,10" TextWrapping="Wrap" Height="26" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="244"/>
+        <Button Content="文件" Margin="24,10,0,0" Click="Info_click" HorizontalAlignment="Left" Width="50" Height="22" VerticalAlignment="Top"/>
+        <Button Content="帮助" Margin="104,10,0,0" Click="FeedBack_Click" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
+        <ComboBox x:Name="RateListCbobox" Margin="76,80,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90"/>
+        <ComboBox x:Name="AvailableComCbobox" Margin="76,48,0,0" PreviewMouseDown="AvailableComCbobox_PreviewMouseDown" HorizontalAlignment="Left" Width="90" Height="22" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtTip" Margin="186,9,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
+        <Button Content="打开文件" Margin="0,0,118,38" Click="Button_Click" HorizontalAlignment="Right" Width="88" Height="33" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="RecCount1" Margin="239,54,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120"/>
+        <TextBox Margin="89,363,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="77"/>
+        <d3:ChartPlotter x:Name="plotter" Margin="186,172,20,208">
+            <d3:ChartPlotter.VerticalAxis>
+                <d3:VerticalIntegerAxis />
+            </d3:ChartPlotter.VerticalAxis>
+
+            <d3:ChartPlotter.HorizontalAxis>
+                <d3:HorizontalIntegerAxis />
+            </d3:ChartPlotter.HorizontalAxis>
+        </d3:ChartPlotter>
 
     </Grid>
 </Window>

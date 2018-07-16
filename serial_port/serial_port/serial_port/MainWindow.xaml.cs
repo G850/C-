@@ -22,6 +22,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Diagnostics;
+using System.Windows.Threading;
+using Microsoft.Research.DynamicDataDisplay;
+using Microsoft.Research.DynamicDataDisplay.DataSources;
 
 namespace serial_port
 {
@@ -38,7 +42,12 @@ namespace serial_port
         private bool WaitClose = false;        //invoke里判断是否正在关闭串口是否正在关闭串口，执行Application.DoEvents，并阻止再次invoke ,解决关闭串口时，程序假死，具体参见http://news.ccidnet.com/art/32859/20100524/2067861_4.html 仅在单线程收发使用，但是在公共代码区有相关设置，所以未用#define隔离  
         IList<Customer> comList = new List<Customer>();//可用串口集合  
         DispatcherTimer autoSendTick = new DispatcherTimer();//定时发送  
-    #if MULTITHREAD
+
+        private ObservableDataSource<Point> dataSource = new ObservableDataSource<Point>();
+        double Rec_count;
+        double Rec_Data;
+
+#if MULTITHREAD
         private static bool Sending = false;   //正在发送数据状态字  
         private static Thread _ComSend;        //发送数据线程  
         Queue recQueue = new Queue();          //接收数据过程中，接收数据线程与数据处理线程直接传递的队列，先进先出  
@@ -55,6 +64,9 @@ namespace serial_port
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)//主窗口初始化  
         {
+
+            DisplayChart();//图表显示
+
             //↓↓↓↓↓↓↓↓↓可用串口下拉控件↓↓↓↓↓↓↓↓↓  
             ports = SerialPort.GetPortNames();       //获取可用串口  
             if (ports.Length > 0)                    //ports.Length > 0说明有串口可用  
@@ -144,6 +156,7 @@ namespace serial_port
             //Thread _ComRec = new Thread(new ThreadStart(ComRec)); //查询串口接收数据线程声明  
             //_ComRec.Start();//启动线程  
 #endif
+
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)//关闭窗口closing  
         {
@@ -480,7 +493,7 @@ namespace serial_port
         void ComRec()//接收线程，窗口初始化中就开始启动运行  
         {
             //while (true)//一直查询串口接收线程中是否有新数据  
-            //{
+            {
                 if (recQueue.Count > 0)//当串口接收线程中有新的数据时候，队列中有新进的成员recQueue.Count > 0  
                 {
                     string recData;//接收数据转码后缓存  
@@ -491,6 +504,7 @@ namespace serial_port
                         if (recModeCheck.IsChecked == false)//接收模式为ASCII文本模式  
                         {
                             recTBox.Text += recData;//加显到接收区  
+                            //Rec_Data = Convert.ToDouble(recData);
                         }
                         else
                         {
@@ -498,17 +512,24 @@ namespace serial_port
                             for (int i = 0; i < recBuffer.Length; i++)
                             {
                                 recBuffer16.AppendFormat("{0:X2}" + " ", recBuffer[i]);//X2表示十六进制格式（大写），域宽2位，不足的左边填0。  
+                                Rec_Data = Convert.ToDouble(recBuffer[i]);
+                                sendTBox.Text = Convert.ToString(recBuffer[i]);
                             }
                             recTBox.Text += recBuffer16.ToString();//加显到接收区  
+                            
                         }
-                        //RecCount.Text = (Convert.ToInt32(RecCount.Text) + recBuffer.Length).ToString();//接收数据字节数  
-                        
+                        //RecCount1.Text = (Convert.ToInt32(RecCount.Text) + recBuffer.Length).ToString();//接收数据字节数  
+                        Rec_count += recBuffer.Length;
+                        RecCount1.Text = (Rec_count).ToString();
                         //recScrol.ScrollToBottom();//接收文本框滚动至底部  
+
+                        UpdateChart();
+
                     });
                 }
                 else
                     Thread.Sleep(100);//如果不延时，一直查询，将占用CPU过高  
-            //}
+            }
         }
 #else
                 private void ComReceive(object sender, SerialDataReceivedEventArgs e)//接收数据 数据在接收中断里面处理  
@@ -826,6 +847,20 @@ namespace serial_port
 
         }
 
-      
+        void DisplayChart()
+        {
+            plotter.AddLineGraph(dataSource, Colors.Green, 2, "Percentage");
+            plotter.Viewport.FitToView();
+        }
+
+        void UpdateChart()
+        {
+            RecCount.Text = (Rec_count).ToString();
+            double x = Rec_count;
+            double y = Rec_Data;
+            Point point = new Point(x, y);
+            dataSource.AppendAsync(base.Dispatcher, point);
+        }
+
     }
 }
