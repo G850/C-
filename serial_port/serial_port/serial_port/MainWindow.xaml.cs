@@ -23,7 +23,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Diagnostics;
-using System.Windows.Threading;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 
@@ -44,8 +43,11 @@ namespace serial_port
         DispatcherTimer autoSendTick = new DispatcherTimer();//定时发送  
 
         private ObservableDataSource<Point> dataSource = new ObservableDataSource<Point>();
+        private LineGraph Graph = new LineGraph();
         double Rec_count;
         double Rec_Data;
+
+        Int32 Send_Count;//接收计数缓存
 
 #if MULTITHREAD
         private static bool Sending = false;   //正在发送数据状态字  
@@ -355,7 +357,9 @@ namespace serial_port
                         ComPort.Write(sendBuffer, sendTimes * 1000, sendBuffer.Length % 1000);
                         UIAction(() =>
                         {
-                            SendCount.Text = (Convert.ToInt32(SendCount.Text) + sendBuffer.Length % 1000).ToString();//刷新发送字节数  
+                            //SendCount.Text = (Convert.ToInt32(SendCount.Text) + sendBuffer.Length % 1000).ToString();//刷新发送字节数  
+                            Send_Count += sendBuffer.Length % 1000;
+                            SendCount.Text = (Send_Count).ToString();
                         });
                     }
                 }
@@ -503,8 +507,8 @@ namespace serial_port
                     {
                         if (recModeCheck.IsChecked == false)//接收模式为ASCII文本模式  
                         {
-                            recTBox.Text += recData;//加显到接收区  
-                            //Rec_Data = Convert.ToDouble(recData);
+                            recTBox.Text += recData;//加显到接收区
+                            Rec_Data = Convert.ToDouble(recData);
                         }
                         else
                         {
@@ -513,10 +517,9 @@ namespace serial_port
                             {
                                 recBuffer16.AppendFormat("{0:X2}" + " ", recBuffer[i]);//X2表示十六进制格式（大写），域宽2位，不足的左边填0。  
                                 Rec_Data = Convert.ToDouble(recBuffer[i]);
-                                sendTBox.Text = Convert.ToString(recBuffer[i]);
+                                //sendTBox.Text = Convert.ToString(recBuffer[i]);
                             }
-                            recTBox.Text += recBuffer16.ToString();//加显到接收区  
-                            
+                            recTBox.Text += recBuffer16.ToString();//加显到接收区            
                         }
                         //RecCount1.Text = (Convert.ToInt32(RecCount.Text) + recBuffer.Length).ToString();//接收数据字节数  
                         Rec_count += recBuffer.Length;
@@ -645,6 +648,13 @@ namespace serial_port
         private void RecClearBtn_Click(object sender, RoutedEventArgs e)//清空接收区  
         {
             recTBox.Text = "";
+            RecCount1.Text = "0";
+            Rec_count = 0;
+
+            plotter.Children.Remove(Graph);
+            dataSource = new ObservableDataSource<Point>();
+
+            DisplayChart();
         }
         private void CountClearBtn_Click(object sender, RoutedEventArgs e)//计数清零  
         {
@@ -709,15 +719,17 @@ namespace serial_port
             checkText = System.Text.Encoding.Default.GetBytes(textBox.Text);
             for (int i = 0; i < textBox.Text.Length; i++)
             {
-                result &= 0x2F < (Convert.ToInt32(checkText[i])) & (Convert.ToInt32(checkText[i])) < 0x3A;//0x2f-0x3a之间是数字0-10的ASCII码  
+                result &= 0x2f < (Convert.ToInt32(checkText[i])) & (Convert.ToInt32(checkText[i])) < 0x3a;//0x2f-0x3a之间是数字0-10的ASCII码  
             }
             if (change[0].AddedLength > 0)
             {
-
-                if (!result || Convert.ToInt32(textBox.Text) > 100000)//不是数字或数据大于100000，取消本次change  
+                if (result)//不是数字或数据大于100000，取消本次change  
                 {
-                    textBox.Text = textBox.Text.Remove(offset, change[0].AddedLength);
-                    textBox.Select(offset, 0);
+                    if (Convert.ToInt32(textBox.Text) > 100000)
+                    {
+                        textBox.Text = textBox.Text.Remove(offset, change[0].AddedLength);
+                        textBox.Select(offset, 0);
+                    } 
                 }
             }
         }
@@ -841,18 +853,16 @@ namespace serial_port
             //    feedBack.Owner = this;//赋予主窗口，子窗口打开后，再次点击主窗口，子窗口闪烁  
             //   feedBack.ShowDialog();//ShowDialog方式打开反馈窗口  
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 
         }
-
         void DisplayChart()
         {
-            plotter.AddLineGraph(dataSource, Colors.Green, 2, "Percentage");
+            Graph = plotter.AddLineGraph(dataSource, Colors.Green, 2, "Percentage");
             plotter.Viewport.FitToView();
+           
         }
-
         void UpdateChart()
         {
             RecCount.Text = (Rec_count).ToString();
@@ -861,6 +871,5 @@ namespace serial_port
             Point point = new Point(x, y);
             dataSource.AppendAsync(base.Dispatcher, point);
         }
-
     }
 }
